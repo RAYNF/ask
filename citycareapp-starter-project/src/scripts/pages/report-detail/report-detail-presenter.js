@@ -106,6 +106,22 @@ export default class ReportDetailPresenter {
       this.#view.saveToBookmarkFailed(error.message);
     }
   }
+
+  // async saveReport() {
+  //   try {
+  //     const report = await this.#apiModel.getReportById(this.#reportId);
+  //     await this.#dbModel.putReport(report.data);
+
+  //     this.#view.saveToBookmarkSuccessfully('Success to save to bookmark');
+
+  //     // Tambahkan ini untuk memastikan tombol langsung diperbarui setelah simpan
+  //     await this.showSaveButton();
+  //   } catch (error) {
+  //     console.error('saveReport: error:', error);
+  //     this.#view.saveToBookmarkFailed(error.message);
+  //   }
+  // }
+
   async removeReport() {
     try {
       await this.#dbModel.removeReport(this.#reportId);
@@ -116,7 +132,7 @@ export default class ReportDetailPresenter {
     }
   }
   async showSaveButton() {
-    if (this.#isReportSaved()) {
+    if (await this.#isReportSaved()) {
       this.#view.renderRemoveButton();
       return;
     }
@@ -125,4 +141,9 @@ export default class ReportDetailPresenter {
   async #isReportSaved() {
     return !!(await this.#dbModel.getReportById(this.#reportId));
   }
+  // async #isReportSaved() {
+  //   const result = await this.#dbModel.getReportById(this.#reportId);
+  //   console.log('Is saved?', result);
+  //   return !!result;
+  // }
 }

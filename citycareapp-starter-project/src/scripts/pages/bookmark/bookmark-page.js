@@ -1,12 +1,12 @@
-import Database from '../../data/database';
 import {
   generateLoaderAbsoluteTemplate,
   generateReportItemTemplate,
   generateReportsListEmptyTemplate,
   generateReportsListErrorTemplate,
 } from '../../templates';
-import Map from '../../utils/map';
 import BookmarkPresenter from './bookmark-presenter';
+import Database from '../../data/database';
+import Map from '../../utils/map';
 
 export default class BookmarkPage {
   #presenter = null;
@@ -51,21 +51,34 @@ export default class BookmarkPage {
         const coordinate = [report.location.latitude, report.location.longitude];
         const markerOptions = { alt: report.title };
         const popupOptions = { content: report.title };
-
         this.#map.addMarker(coordinate, markerOptions, popupOptions);
       }
 
       return accumulator.concat(
         generateReportItemTemplate({
           ...report,
-          placeNameLocation: report.location.placName,
+          placeNameLocation: report.location.placeName,
           reporterName: report.reporter.name,
         }),
       );
     }, '');
 
     document.getElementById('reports-list').innerHTML = `
-      <div class="reports-list">${html}</div>`;
+      <div class="reports-list">${html}</div>
+    `;
+  }
+
+  async initialMap() {
+    this.#map = await Map.build('#map', {
+      zoom: 10,
+      locate: true,
+    });
+  }
+  showMapLoading() {
+    document.getElementById('map-loading-container').innerHTML = generateLoaderAbsoluteTemplate();
+  }
+  hideMapLoading() {
+    document.getElementById('map-loading-container').innerHTML = '';
   }
 
   populateBookmarkedReportsListEmpty() {
@@ -83,20 +96,5 @@ export default class BookmarkPage {
 
   hideReportsListLoading() {
     document.getElementById('reports-list-loading-container').innerHTML = '';
-  }
-
-  async initialMap() {
-    this.#map = await Map.build('#map', {
-      zoom: 10,
-      locate: true,
-    });
-  }
-
-  showMapLoading() {
-    document.getElementById('map-loading-container').innerHTML = generateLoaderAbsoluteTemplate();
-  }
-
-  hideMapLoading() {
-    document.getElementById('map-loading-container').innerHTML = '';
   }
 }

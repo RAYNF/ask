@@ -24,6 +24,8 @@ export default class BookmarkPresenter {
     this.#view.showReportsListLoading();
 
     try {
+      await this.showReportsListMap();
+
       const listOfReports = await this.#model.getAllReports();
       const reports = await Promise.all(listOfReports.map(reportMapper));
 

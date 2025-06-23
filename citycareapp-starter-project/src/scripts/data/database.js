@@ -17,7 +17,6 @@ const Database = {
     if (!Object.hasOwn(report, 'id')) {
       throw new Error('`id` is required to save.');
     }
-
     return (await dbPromise).put(OBJECT_STORE_NAME, report);
   },
 
@@ -27,7 +26,6 @@ const Database = {
     }
     return (await dbPromise).get(OBJECT_STORE_NAME, id);
   },
-
   async getAllReports() {
     return (await dbPromise).getAll(OBJECT_STORE_NAME);
   },
